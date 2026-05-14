@@ -13,7 +13,7 @@ function Index() {
   const [productId, setProductId] = useState("A102");
   const [price, setPrice] = useState("450");
   const [eximcode, setEximcode] = useState("");
-  const [qty, setQty] = useState(25);
+  const [qty, setQty] = useState(1);
   const [dark, setDark] = useState(false);
   const [printing, setPrinting] = useState(false);
 
