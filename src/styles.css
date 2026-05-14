@@ -102,8 +102,9 @@
 
 /* Sticker preview */
 .sticker-label {
-  width: 30mm;
-  height: 36mm;
+  box-sizing: border-box;
+  width: 36mm;
+  height: 30mm;
   background: #ffffff;
   color: #000000;
   border: 1px solid #e5e5e5;
@@ -118,15 +119,16 @@
 /* Print rules: only the sticker prints, exact size */
 @media print {
   @page {
-    size: 30mm 36mm;
+    size: 36mm 30mm;
     margin: 0;
   }
   html, body {
-    width: 30mm;
-    height: 36mm;
+    width: 36mm !important;
+    height: 30mm !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
+    overflow: hidden !important;
   }
   body * {
     visibility: hidden !important;
@@ -135,19 +137,26 @@
     visibility: visible !important;
   }
   #print-area {
-    position: absolute;
+    position: fixed !important;
     top: 0;
     left: 0;
+    width: 36mm !important;
+    height: auto !important;
     margin: 0;
     padding: 0;
-    display: block;
+    display: block !important;
   }
   .sticker-label {
+    box-sizing: border-box !important;
     border: none !important;
     box-shadow: none !important;
-    width: 30mm !important;
-    height: 36mm !important;
-    padding: 2mm !important;
+    width: 36mm !important;
+    min-width: 36mm !important;
+    max-width: 36mm !important;
+    height: 30mm !important;
+    min-height: 30mm !important;
+    max-height: 30mm !important;
+    padding: 1.8mm 2mm !important;
     margin: 0 !important;
     page-break-after: always;
     break-after: page;
