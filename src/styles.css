@@ -121,6 +121,13 @@
     size: 30mm 36mm;
     margin: 0;
   }
+  html, body {
+    width: 30mm;
+    height: 36mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
   body * {
     visibility: hidden !important;
   }
@@ -128,8 +135,9 @@
     visibility: visible !important;
   }
   #print-area {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
     margin: 0;
     padding: 0;
     display: block;
@@ -139,6 +147,14 @@
     box-shadow: none !important;
     width: 30mm !important;
     height: 36mm !important;
+    padding: 2mm !important;
+    margin: 0 !important;
     page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+  }
+  .sticker-label:last-child {
+    page-break-after: auto;
+    break-after: auto;
   }
 }
