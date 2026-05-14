@@ -168,7 +168,7 @@ function Index() {
             <div className="mb-7 flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-semibold tracking-tight">Live Preview</h2>
-                <p className="mt-1 text-sm text-muted-foreground">30mm × 36mm thermal label</p>
+                <p className="mt-1 text-sm text-muted-foreground">36mm × 30mm thermal label</p>
               </div>
               <span className="rounded-full border border-border bg-muted/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                 {qty} × copies
