@@ -37,22 +37,20 @@ function Index() {
     }, 350);
   };
 
-  const onKey =
-    (next: "price" | "qty" | "print") =>
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        if (next === "price") {
-          priceRef.current?.focus();
-          priceRef.current?.select();
-        } else if (next === "qty") {
-          qtyRef.current?.focus();
-          qtyRef.current?.select();
-        } else {
-          handlePrint();
-        }
+  const onKey = (next: "price" | "qty" | "print") => (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (next === "price") {
+        priceRef.current?.focus();
+        priceRef.current?.select();
+      } else if (next === "qty") {
+        qtyRef.current?.focus();
+        qtyRef.current?.select();
+      } else {
+        handlePrint();
       }
-    };
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -94,7 +92,11 @@ function Index() {
             <div className="mb-7">
               <h1 className="text-xl font-semibold tracking-tight">New Sticker Batch</h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Press <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium">Enter</kbd> to move forward.
+                Press{" "}
+                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium">
+                  Enter
+                </kbd>{" "}
+                to move forward.
               </p>
             </div>
 
@@ -135,9 +137,7 @@ function Index() {
                   <input
                     ref={qtyRef}
                     value={qty}
-                    onChange={(e) =>
-                      setQty(Math.max(1, parseInt(e.target.value || "1", 10) || 1))
-                    }
+                    onChange={(e) => setQty(Math.max(1, parseInt(e.target.value || "1", 10) || 1))}
                     onKeyDown={onKey("print")}
                     inputMode="numeric"
                     className="h-full flex-1 bg-transparent text-center text-base font-semibold tabular-nums outline-none"
@@ -205,13 +205,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function StepperBtn({
-  onClick,
-  children,
-}: {
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+function StepperBtn({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       type="button"
@@ -225,18 +219,16 @@ function StepperBtn({
 
 function Sticker({ productId, price }: { productId: string; price: string }) {
   return (
-    <div className="sticker-label">
-      <div className="text-center leading-tight">
+    <div className="sticker-label" style={{ width: "36mm", height: "30mm", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "2mm", boxSizing: "border-box" }}>
+      <div className="text-center">
         <div style={{ fontSize: "8pt", fontWeight: 700, letterSpacing: "0.02em" }}>
           {STORE_NAME}
         </div>
-        <div style={{ fontSize: "5pt", marginTop: "0.5mm", color: "#333" }}>
-          {STORE_EMAIL}
-        </div>
+        <div style={{ fontSize: "5pt", marginTop: "0.5mm", color: "#333" }}>{STORE_EMAIL}</div>
       </div>
 
-      <div className="text-center">
-        <div style={{ fontSize: "7pt", fontWeight: 600, letterSpacing: "0.05em" }}>
+      <div className="text-center flex-1">
+        <div style={{ fontSize: "7pt", fontWeight: 600, letterSpacing: "0.05em", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           PID: {productId || "—"}
         </div>
       </div>
@@ -248,6 +240,10 @@ function Sticker({ productId, price }: { productId: string; price: string }) {
             fontWeight: 800,
             letterSpacing: "-0.01em",
             lineHeight: 1,
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
         >
           Rs. {price || "0"}

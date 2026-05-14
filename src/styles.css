@@ -1,6 +1,6 @@
 @import "tailwindcss" source(none);
-@source "../src";
 @import "tw-animate-css";
+@source "../src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -91,7 +91,8 @@
     border-color: var(--color-border);
   }
 
-  html, body {
+  html,
+  body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -122,7 +123,8 @@
     size: 36mm 30mm;
     margin: 0;
   }
-  html, body {
+  html,
+  body {
     width: 36mm !important;
     height: 30mm !important;
     margin: 0 !important;
@@ -133,7 +135,8 @@
   body * {
     visibility: hidden !important;
   }
-  #print-area, #print-area * {
+  #print-area,
+  #print-area * {
     visibility: visible !important;
   }
   #print-area {
