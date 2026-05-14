@@ -6,18 +6,20 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const STORE_NAME = "STORE NAME";
-const STORE_EMAIL = "storeemail@gmail.com";
+const STORE_NAME = "BHATTARAI TRACTOR PARTS";
+const STORE_EMAIL = "bhattaraitractors@gamil.com";
 
 function Index() {
   const [productId, setProductId] = useState("A102");
   const [price, setPrice] = useState("450");
+  const [eximcode, setEximcode] = useState("");
   const [qty, setQty] = useState(25);
   const [dark, setDark] = useState(false);
   const [printing, setPrinting] = useState(false);
 
   const pidRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
+  const eximcodeRef = useRef<HTMLInputElement>(null);
   const qtyRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -37,20 +39,24 @@ function Index() {
     }, 350);
   };
 
-  const onKey = (next: "price" | "qty" | "print") => (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (next === "price") {
-        priceRef.current?.focus();
-        priceRef.current?.select();
-      } else if (next === "qty") {
-        qtyRef.current?.focus();
-        qtyRef.current?.select();
-      } else {
-        handlePrint();
+  const onKey =
+    (next: "eximcode" | "mrp" | "qty" | "print") => (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (next === "eximcode") {
+          eximcodeRef.current?.focus();
+          eximcodeRef.current?.select();
+        } else if (next === "mrp") {
+          priceRef.current?.focus();
+          priceRef.current?.select();
+        } else if (next === "qty") {
+          qtyRef.current?.focus();
+          qtyRef.current?.select();
+        } else {
+          handlePrint();
+        }
       }
-    }
-  };
+    };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -106,8 +112,19 @@ function Index() {
                   ref={pidRef}
                   value={productId}
                   onChange={(e) => setProductId(e.target.value.toUpperCase())}
-                  onKeyDown={onKey("price")}
+                  onKeyDown={onKey("eximcode")}
                   placeholder="Enter Product ID"
+                  className="h-12 w-full rounded-lg border border-input bg-background px-4 text-base font-medium tracking-wide outline-none transition-all placeholder:text-muted-foreground/60 focus:border-ring focus:ring-4 focus:ring-ring/15"
+                />
+              </Field>
+
+              <Field label="Exim Code">
+                <input
+                  ref={eximcodeRef}
+                  value={eximcode}
+                  onChange={(e) => setEximcode(e.target.value.toUpperCase())}
+                  onKeyDown={onKey("mrp")}
+                  placeholder="Enter Exim Code"
                   className="h-12 w-full rounded-lg border border-input bg-background px-4 text-base font-medium tracking-wide outline-none transition-all placeholder:text-muted-foreground/60 focus:border-ring focus:ring-4 focus:ring-ring/15"
                 />
               </Field>
@@ -177,7 +194,7 @@ function Index() {
 
             <div className="flex min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
               <div style={{ transform: "scale(2.2)", transformOrigin: "center" }}>
-                <Sticker productId={productId} price={price} />
+                <Sticker productId={productId} price={price} eximcode={eximcode} />
               </div>
             </div>
           </section>
@@ -186,7 +203,7 @@ function Index() {
         {/* Print area: rendered hidden offscreen, shown only when printing */}
         <div id="print-area" className="hidden print:block">
           {Array.from({ length: qty }).map((_, i) => (
-            <Sticker key={i} productId={productId} price={price} />
+            <Sticker key={i} productId={productId} price={price} eximcode={eximcode} />
           ))}
         </div>
       </main>
@@ -217,28 +234,70 @@ function StepperBtn({ onClick, children }: { onClick: () => void; children: Reac
   );
 }
 
-function Sticker({ productId, price }: { productId: string; price: string }) {
+function Sticker({
+  productId,
+  price,
+  eximcode,
+}: {
+  productId: string;
+  price: string;
+  eximcode?: string;
+}) {
+  const pidLength = productId.length;
+  const priceLength = price.length;
+  const companyLength = STORE_NAME.length;
+  const pidFontSize = pidLength > 6 ? "6pt" : pidLength > 4 ? "6.5pt" : "7pt";
+  const priceFontSize = priceLength > 5 ? "6pt" : priceLength > 4 ? "6.5pt" : "7pt";
+  const companyFontSize = companyLength > 25 ? "6pt" : companyLength > 20 ? "6.5pt" : "7pt";
+
   return (
-    <div className="sticker-label" style={{ width: "36mm", height: "30mm", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "2mm", boxSizing: "border-box" }}>
-      <div className="text-center">
-        <div style={{ fontSize: "8pt", fontWeight: 700, letterSpacing: "0.02em" }}>
-          {STORE_NAME}
-        </div>
-        <div style={{ fontSize: "5pt", marginTop: "0.5mm", color: "#333" }}>{STORE_EMAIL}</div>
-      </div>
+    <div
+      className="sticker-label"
+      style={{
+        width: "36mm",
+        height: "30mm",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "2mm",
+        boxSizing: "border-box",
+        fontFamily: "Times New Roman, serif",
+      }}
+    >
+<div className="text-center">
+         <div style={{ fontSize: companyFontSize, fontWeight: 700, letterSpacing: "0.02em" }}>
+           {STORE_NAME}
+         </div>
+         <div style={{ fontSize: "5pt", marginTop: "0.5mm", color: "#333" }}>{STORE_EMAIL}</div>
+       </div>
 
       <div className="text-center flex-1">
-        <div style={{ fontSize: "7pt", fontWeight: 600, letterSpacing: "0.05em", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div
+          style={{
+            fontSize: pidFontSize,
+            fontWeight: 400,
+            letterSpacing: "0.05em",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
           PID: {productId || "—"}
         </div>
+        {eximcode && (
+          <div style={{ fontSize: "5pt", fontWeight: 400, marginTop: "0.5mm", color: "#333" }}>
+            EXIM: {eximcode}
+          </div>
+        )}
       </div>
 
       <div className="text-center">
         <div
           style={{
-            fontSize: "16pt",
-            fontWeight: 800,
-            letterSpacing: "-0.01em",
+            fontSize: priceFontSize,
+            fontWeight: 400,
+            letterSpacing: "0.02em",
             lineHeight: 1,
             maxWidth: "100%",
             overflow: "hidden",
@@ -246,7 +305,7 @@ function Sticker({ productId, price }: { productId: string; price: string }) {
             whiteSpace: "nowrap",
           }}
         >
-          Rs. {price || "0"}
+          MRP: Rs. {price || "0"}
         </div>
       </div>
     </div>
