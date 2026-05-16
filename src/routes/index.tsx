@@ -1,62 +1,69 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Minus, Plus, Printer, Settings, Moon, Sun, Tag } from "lucide-react";
+import { Minus, Plus, Printer, Settings, Moon, Sun, Tag, LogOut } from "lucide-react";
+import { useAuth } from "../lib/auth-context";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const STORE_NAME = "BHATTARAI TRACTOR PARTS";
-const STORE_EMAIL = "bhattaraitractors@gamil.com";
-
 function Index() {
-  const [productId, setProductId] = useState("A102");
-  const [price, setPrice] = useState("450");
-  const [eximcode, setEximcode] = useState("");
-  const [qty, setQty] = useState(1);
+  const { user, logout, isLoading } = useAuth();
+  console.log("USER OBJECT:", user);
+  console.log("isLoading:", isLoading);
+  console.log("companyName:", user?.companyName);
+  console.log("companyEmail:", user?.companyEmail);
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  const storeName = user?.companyName || "";
+  const storeEmail = user?.companyEmail || "";
+
   const [dark, setDark] = useState(false);
+  const [productId, setProductId] = useState("");
+  const [eximcode, setEximcode] = useState("");
+  const [price, setPrice] = useState("");
+  const [qty, setQty] = useState(1);
   const [printing, setPrinting] = useState(false);
+  
+  useEffect(() => {
+    if (dark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [dark]);
 
   const pidRef = useRef<HTMLInputElement>(null);
-  const priceRef = useRef<HTMLInputElement>(null);
   const eximcodeRef = useRef<HTMLInputElement>(null);
+  const priceRef = useRef<HTMLInputElement>(null);
   const qtyRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    pidRef.current?.focus();
-    pidRef.current?.select();
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
+  const onKey = (next: string) => (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const refs: Record<string, React.RefObject<HTMLInputElement | null>> = {
+        eximcode: eximcodeRef,
+        mrp: priceRef,
+        qty: qtyRef,
+      };
+      if (refs[next]?.current) {
+        refs[next].current!.focus();
+      } else if (next === "print") {
+        handlePrint();
+      }
+    }
+  };
 
   const handlePrint = () => {
     setPrinting(true);
     setTimeout(() => {
       window.print();
       setPrinting(false);
-    }, 350);
+    }, 100);
   };
-
-  const onKey =
-    (next: "eximcode" | "mrp" | "qty" | "print") => (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        if (next === "eximcode") {
-          eximcodeRef.current?.focus();
-          eximcodeRef.current?.select();
-        } else if (next === "mrp") {
-          priceRef.current?.focus();
-          priceRef.current?.select();
-        } else if (next === "qty") {
-          qtyRef.current?.focus();
-          qtyRef.current?.select();
-        } else {
-          handlePrint();
-        }
-      }
-    };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -85,6 +92,13 @@ function Index() {
               aria-label="Settings"
             >
               <Settings className="h-4 w-4" />
+            </button>
+            <button
+              onClick={logout}
+              className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="Logout"
+            >
+              <LogOut className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -194,7 +208,13 @@ function Index() {
 
             <div className="flex min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
               <div style={{ transform: "scale(2.2)", transformOrigin: "center" }}>
-                <Sticker productId={productId} price={price} eximcode={eximcode} />
+                <Sticker
+                  productId={productId}
+                  price={price}
+                  eximcode={eximcode}
+                  companyName={storeName}
+                  companyEmail={storeEmail}
+                />
               </div>
             </div>
           </section>
@@ -203,7 +223,14 @@ function Index() {
         {/* Print area: rendered hidden offscreen, shown only when printing */}
         <div id="print-area" className="hidden print:block">
           {Array.from({ length: qty }).map((_, i) => (
-            <Sticker key={i} productId={productId} price={price} eximcode={eximcode} />
+            <Sticker
+              key={i}
+              productId={productId}
+              price={price}
+              eximcode={eximcode}
+              companyName={storeName}
+              companyEmail={storeEmail}
+            />
           ))}
         </div>
       </main>
@@ -238,14 +265,18 @@ function Sticker({
   productId,
   price,
   eximcode,
+  companyName,
+  companyEmail,
 }: {
   productId: string;
   price: string;
   eximcode?: string;
+  companyName: string;
+  companyEmail: string;
 }) {
   const pidLength = productId.length;
   const priceLength = price.length;
-  const companyLength = STORE_NAME.length;
+  const companyLength = companyName.length;
   const pidFontSize = pidLength > 6 ? "6pt" : pidLength > 4 ? "6.5pt" : "7pt";
   const priceFontSize = priceLength > 5 ? "6pt" : priceLength > 4 ? "6.5pt" : "7pt";
   const companyFontSize = companyLength > 25 ? "6pt" : companyLength > 20 ? "6.5pt" : "7pt";
@@ -264,12 +295,12 @@ function Sticker({
         fontFamily: "Times New Roman, serif",
       }}
     >
-<div className="text-center">
-         <div style={{ fontSize: companyFontSize, fontWeight: 700, letterSpacing: "0.02em" }}>
-           {STORE_NAME}
-         </div>
-         <div style={{ fontSize: "5pt", marginTop: "0.5mm", color: "#333" }}>{STORE_EMAIL}</div>
-       </div>
+      <div className="text-center">
+        <div style={{ fontSize: companyFontSize, fontWeight: 700, letterSpacing: "0.02em" }}>
+          {companyName}
+        </div>
+        <div style={{ fontSize: "5pt", marginTop: "0.5mm", color: "#333" }}>{companyEmail}</div>
+      </div>
 
       <div className="text-center flex-1">
         <div
