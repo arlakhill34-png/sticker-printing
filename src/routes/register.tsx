@@ -50,24 +50,26 @@ function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-surface to-background px-4 py-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] px-4 py-8">
       <div className="w-full max-w-md">
-        <Card className="shadow-elegant border-0 bg-card/80 backdrop-blur-sm">
-          <CardHeader className="space-y-2 text-center pb-6">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-              <UserPlus className="h-8 w-8 text-primary" />
+        <Card className="shadow-2xl border-0 bg-card/70 backdrop-blur-xl bg-opacity-60 border border-white/10">
+          <CardHeader className="space-y-4 text-center pb-8">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/40">
+              <UserPlus className="h-10 w-10 text-primary" />
             </div>
-            <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-            <CardDescription>Register your company to get started</CardDescription>
+            <CardTitle className="text-3xl font-bold text-white">Create Account</CardTitle>
+            <CardDescription className="text-muted-foreground/80 max-w-xl mx-auto">
+              Register your company to get started
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-5">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="companyName" className="text-sm font-medium">
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-3">
+                <Label htmlFor="companyName" className="block text-sm font-medium text-white mb-1">
                   Company Name
                 </Label>
                 <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                   <Input
                     id="companyName"
                     type="text"
@@ -75,16 +77,16 @@ function Register() {
                     onChange={(e) => setCompanyName(e.target.value)}
                     placeholder="Enter company name"
                     required
-                    className="pl-10 h-11 bg-background/50"
+                    className="pl-11 h-12 bg-background/30 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white/10 transition-all"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="companyEmail" className="text-sm font-medium">
+              <div className="space-y-3">
+                <Label htmlFor="companyEmail" className="block text-sm font-medium text-white mb-1">
                   Company Email
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                   <Input
                     id="companyEmail"
                     type="email"
@@ -92,16 +94,16 @@ function Register() {
                     onChange={(e) => setCompanyEmail(e.target.value)}
                     placeholder="Enter company email"
                     required
-                    className="pl-10 h-11 bg-background/50"
+                    className="pl-11 h-12 bg-background/30 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white/10 transition-all"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm font-medium">
+              <div className="space-y-3">
+                <Label htmlFor="phoneNumber" className="block text-sm font-medium text-white mb-1">
                   Phone Number
                 </Label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                   <Input
                     id="phoneNumber"
                     type="tel"
@@ -109,16 +111,16 @@ function Register() {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     placeholder="Enter phone number"
                     required
-                    className="pl-10 h-11 bg-background/50"
+                    className="pl-11 h-12 bg-background/30 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white/10 transition-all"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">
+              <div className="space-y-3">
+                <Label htmlFor="password" className="block text-sm font-medium text-white mb-1">
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                   <Input
                     id="password"
                     type="password"
@@ -126,14 +128,14 @@ function Register() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                     required
-                    className="pl-10 h-11 bg-background/50"
+                    className="pl-11 h-12 bg-background/30 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white/10 transition-all"
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full h-11 font-medium" disabled={loading}>
+              <Button type="submit" className="w-full h-12 font-medium bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5" disabled={loading}>
                 {loading ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin text-white" />
                     Creating Account...
                   </>
                 ) : (
@@ -141,11 +143,11 @@ function Register() {
                 )}
               </Button>
             </form>
-            <div className="pt-2 text-center text-sm">
-              <span className="text-muted-foreground">Already have an account? </span>
+            <div className="pt-4 text-center text-sm">
+              <span className="text-muted-foreground/70">Already have an account? </span>
               <button
                 onClick={() => navigate({ to: "/login" })}
-                className="font-medium text-primary hover:underline"
+                className="font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 Sign in
               </button>
