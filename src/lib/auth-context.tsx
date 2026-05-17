@@ -6,7 +6,7 @@ interface AuthContextValue {
   token: string | null;
   isLoading: boolean;
   login: (token: string, user: User) => void;
-  logout: () => void;
+  logout: (onDone?: () => void) => void;
   refreshUser: () => Promise<void>;
 }
 

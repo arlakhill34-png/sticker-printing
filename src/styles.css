@@ -101,28 +101,14 @@
   }
 }
 
-/* Sticker preview */
-.sticker-label {
-  box-sizing: border-box;
-  width: 36mm;
-  height: 30mm;
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #e5e5e5;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2mm 2mm;
-  font-family: var(--font-sans);
-  box-shadow: 0 8px 30px -8px oklch(0 0 0 / 0.18);
-}
-
-/* Print rules: only the sticker prints, exact size */
+/* Print rules: only print-mode stickers print at exact 36mm × 30mm.
+   Preview-mode is intentionally NOT affected by these mm-based rules. */
 @media print {
   @page {
     size: 36mm 30mm;
     margin: 0;
   }
+
   html,
   body {
     width: 36mm !important;
@@ -132,13 +118,16 @@
     background: #ffffff !important;
     overflow: hidden !important;
   }
+
   body * {
     visibility: hidden !important;
   }
+
   #print-area,
   #print-area * {
     visibility: visible !important;
   }
+
   #print-area {
     position: fixed !important;
     top: 0;
@@ -149,7 +138,9 @@
     padding: 0;
     display: block !important;
   }
-  .sticker-label {
+
+  /* Only apply size/print behavior to print-mode sticker elements */
+  [data-sticker-mode="print"] {
     box-sizing: border-box !important;
     border: none !important;
     box-shadow: none !important;
@@ -165,8 +156,10 @@
     break-after: page;
     overflow: hidden;
   }
-  .sticker-label:last-child {
+
+  [data-sticker-mode="print"]:last-child {
     page-break-after: auto;
     break-after: auto;
   }
 }
+

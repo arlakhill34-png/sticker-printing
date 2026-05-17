@@ -2,10 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Minus, Plus, Printer, Settings, Moon, Sun, Tag, LogOut } from "lucide-react";
 import { useAuth } from "../lib/auth-context";
-import { Sticker } from "../components/sticker/Sticker";
 
 export const Route = createFileRoute("/")({
-
   component: Index,
 });
 
@@ -99,7 +97,11 @@ function Index() {
               <Settings className="h-4 w-4" />
             </button>
             <button
-              onClick={() => logout(() => navigate({ to: "/login" }))}
+               onClick={ (): void => {
+                  logout( (): void => {
+                      navigate({ to: "/login" });
+                  });
+              } }
               className="flex h-9 w-9 items-center justify-center rounded-md text-destructive transition-colors hover:bg-destructive/10"
               aria-label="Logout"
             >
@@ -109,9 +111,9 @@ function Index() {
         </div>
       </header>
 
-      {/* Main */}
+{/* Main */}
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 print:p-0">
-        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 print:hidden">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto] xl:grid-cols-2 sm:gap-8 print:hidden">
           {/* Left: Inputs */}
           <section className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[var(--shadow-elegant)]">
             <div className="mb-6 sm:mb-7">
@@ -213,19 +215,16 @@ function Index() {
               </span>
             </div>
 
-            <div className="flex min-h-[260px] sm:min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-8 sm:py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
-              <div className="flex items-center justify-center">
-                <Sticker
-                  mode="preview"
-                  productId={productId}
-                  price={price}
-                  eximcode={eximcode}
-                  companyName={storeName}
-                  companyEmail={storeEmail}
-                />
-              </div>
-
-            </div>
+<div className="flex min-h-[300px] sm:min-h-[350px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-4 sm:py-6 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)] overflow-visible">
+               <Sticker
+                preview
+                productId={productId}
+                price={price}
+                eximcode={eximcode}
+                companyName={storeName}
+                companyEmail={storeEmail}
+              />
+             </div>
           </section>
         </div>
 
@@ -234,14 +233,12 @@ function Index() {
           {Array.from({ length: qty }).map((_, i) => (
             <Sticker
               key={i}
-              mode="print"
               productId={productId}
               price={price}
               eximcode={eximcode}
               companyName={storeName}
               companyEmail={storeEmail}
             />
-
           ))}
         </div>
       </main>
@@ -272,7 +269,149 @@ function StepperBtn({ onClick, children }: { onClick: () => void; children: Reac
   );
 }
 
+function Sticker({
+  productId,
+  price,
+  eximcode,
+  companyName,
+  companyEmail,
+  preview = false,
+}: {
+  productId: string;
+  price: string;
+  eximcode?: string;
+  companyName: string;
+  companyEmail: string;
+  preview?: boolean;
+}) {
+  const pidLength = productId.length;
+  const priceLength = price.length;
+  const companyLength = companyName.length;
+  const pidFontSize = pidLength > 8 ? "8pt" : pidLength > 6 ? "9pt" : "10pt";
+  const priceFontSize = priceLength > 6 ? "8pt" : priceLength > 4 ? "9pt" : "10pt";
+  const companyFontSize = companyLength > 30 ? "8pt" : companyLength > 25 ? "9pt" : "10pt";
 
+  if (preview) {
+    return (
+      <div
+        className="sticker-label rounded-lg bg-card shadow-xl border border-border"
+        style={{
+          width: "400px",
+          height: "325px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "20px",
+          boxSizing: "border-box",
+          fontFamily: "Times New Roman, serif",
+        }}
+      >
+        <div className="text-center">
+          <div style={{ fontSize: "32px", fontWeight: 700, letterSpacing: "0.02em" }}>
+            {companyName}
+          </div>
+          <div style={{ fontSize: "16px", marginTop: "6px", color: "#333" }}>{companyEmail}</div>
+        </div>
 
+        <div className="text-center flex-1 flex items-center justify-center">
+          <div
+            style={{
+              fontSize: "24px",
+              fontWeight: 400,
+              letterSpacing: "0.05em",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            PID: {productId || "—"}
+          </div>
+          {eximcode && (
+            <div style={{ fontSize: "14px", fontWeight: 400, marginTop: "6px", color: "#333" }}>
+              EXIM: {eximcode}
+            </div>
+          )}
+        </div>
 
+        <div className="text-center">
+          <div
+            style={{
+              fontSize: "24px",
+              fontWeight: 400,
+              letterSpacing: "0.02em",
+              lineHeight: 1,
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            MRP: Rs. {price || "0"}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  return (
+    <div
+      className="sticker-label"
+      style={{
+        width: "36mm",
+        height: "30mm",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "2mm",
+        boxSizing: "border-box",
+        fontFamily: "Times New Roman, serif",
+      }}
+    >
+      <div className="text-center">
+        <div style={{ fontSize: companyFontSize, fontWeight: 700, letterSpacing: "0.02em" }}>
+          {companyName}
+        </div>
+        <div style={{ fontSize: "6pt", marginTop: "1mm", color: "#333" }}>{companyEmail}</div>
+      </div>
+
+      <div className="text-center flex-1">
+        <div
+          style={{
+            fontSize: pidFontSize,
+            fontWeight: 400,
+            letterSpacing: "0.05em",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          PID: {productId || "—"}
+        </div>
+        {eximcode && (
+          <div style={{ fontSize: "6pt", fontWeight: 400, marginTop: "1mm", color: "#333" }}>
+            EXIM: {eximcode}
+          </div>
+        )}
+      </div>
+
+      <div className="text-center">
+        <div
+          style={{
+            fontSize: priceFontSize,
+            fontWeight: 400,
+            letterSpacing: "0.02em",
+            lineHeight: 1,
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          MRP: Rs. {price || "0"}
+        </div>
+      </div>
+    </div>
+  );
+}
