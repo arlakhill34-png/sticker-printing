@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from "../lib/auth-context";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { getToken } from "../lib/api";
+import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
   return <div>404 - Not Found</div>;
@@ -56,6 +57,7 @@ function RootComponent() {
           <Outlet />
         </AuthGuard>
       </AuthProvider>
+      <Toaster position="top-right" richColors />
     </QueryClientProvider>
   );
 }
