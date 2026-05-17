@@ -17,14 +17,6 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-} from "../../components/ui/dropdown-menu";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -49,6 +41,7 @@ import {
   useSidebar,
 } from "../../components/ui/sidebar";
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
+import { AdminInner } from "./index";
 
 export const Route = createFileRoute("/admin/users")({
   component: UsersPage,
@@ -544,5 +537,3 @@ function applyDelete() {
   toastSuccess("User Deleted", { description: `${confirmDialog.user.companyName} removed.` });
   setConfirmDialog(null);
 }
-
-import { AdminInner } from "./index";

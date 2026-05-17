@@ -43,8 +43,6 @@ export const Route = createFileRoute("/admin/")({
   component: DashboardRoot,
 });
 
-export { AdminInner };
-
 function DashboardRoot() {
   const cards = useMemo(
     () => [
@@ -140,7 +138,7 @@ function DashboardRoot() {
   );
 }
 
-function AdminInner({
+export function AdminInner({
   children,
   title,
   subtitle,
