@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Minus, Plus, Printer, Settings, Moon, Sun, Tag, LogOut } from "lucide-react";
 import { useAuth } from "../lib/auth-context";
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const navigate = useNavigate();
   const { user, logout, isLoading } = useAuth();
   console.log("USER OBJECT:", user);
   console.log("isLoading:", isLoading);
@@ -69,14 +70,16 @@ function Index() {
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md print:hidden">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Tag className="h-4 w-4" strokeWidth={2.5} />
             </div>
             <div className="leading-tight">
               <div className="text-sm font-semibold tracking-tight">LabelFlow</div>
-              <div className="text-[11px] text-muted-foreground">Smart Sticker Printing</div>
+              <div className="hidden text-[11px] text-muted-foreground sm:block">
+                Smart Sticker Printing
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -94,8 +97,8 @@ function Index() {
               <Settings className="h-4 w-4" />
             </button>
             <button
-              onClick={logout}
-              className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              onClick={() => logout(() => navigate({ to: "/login" }))}
+              className="flex h-9 w-9 items-center justify-center rounded-md text-destructive transition-colors hover:bg-destructive/10"
               aria-label="Logout"
             >
               <LogOut className="h-4 w-4" />
@@ -105,13 +108,13 @@ function Index() {
       </header>
 
       {/* Main */}
-      <main className="mx-auto max-w-7xl px-6 py-10 print:p-0">
-        <div className="grid gap-8 lg:grid-cols-2 print:hidden">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 print:p-0">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 print:hidden">
           {/* Left: Inputs */}
-          <section className="rounded-2xl border border-border bg-card p-8 shadow-[var(--shadow-elegant)]">
-            <div className="mb-7">
-              <h1 className="text-xl font-semibold tracking-tight">New Sticker Batch</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
+          <section className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[var(--shadow-elegant)]">
+            <div className="mb-6 sm:mb-7">
+              <h1 className="text-lg sm:text-xl font-semibold tracking-tight">New Sticker Batch</h1>
+              <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
                 Press{" "}
                 <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium">
                   Enter
@@ -195,27 +198,27 @@ function Index() {
           </section>
 
           {/* Right: Preview */}
-          <section className="rounded-2xl border border-border bg-card p-8 shadow-[var(--shadow-elegant)]">
+          <section className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[var(--shadow-elegant)]">
             <div className="mb-7 flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold tracking-tight">Live Preview</h2>
-                <p className="mt-1 text-sm text-muted-foreground">36mm × 30mm thermal label</p>
+                <h2 className="text-lg sm:text-xl font-semibold tracking-tight">Live Preview</h2>
+                <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+                  36mm × 30mm thermal label
+                </p>
               </div>
-              <span className="rounded-full border border-border bg-muted/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              <span className="rounded-full border border-border bg-muted/60 px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
                 {qty} × copies
               </span>
             </div>
 
-            <div className="flex min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
-              <div style={{ transform: "scale(2.2)", transformOrigin: "center" }}>
-                <Sticker
-                  productId={productId}
-                  price={price}
-                  eximcode={eximcode}
-                  companyName={storeName}
-                  companyEmail={storeEmail}
-                />
-              </div>
+            <div className="flex min-h-[260px] sm:min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-8 sm:py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
+              <Sticker
+                productId={productId}
+                price={price}
+                eximcode={eximcode}
+                companyName={storeName}
+                companyEmail={storeEmail}
+              />
             </div>
           </section>
         </div>

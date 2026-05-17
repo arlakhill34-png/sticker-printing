@@ -41,10 +41,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(userData);
   };
 
-  const logout = () => {
+  const logout = (onDone?: () => void) => {
     removeToken();
     setToken(null);
     setUser(null);
+    onDone?.();
   };
 
   const refreshUser = async () => {
