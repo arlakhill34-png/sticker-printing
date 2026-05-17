@@ -180,34 +180,32 @@ export const api = {
 
   /** PUT /api/admin/users/:id/status */
   updateUserStatus: async (id: number, status: string): Promise<StatusUpdateResponse> => {
-    const response = await apiFetch<StatusUpdateResponse>(
-      `${API_BASE}/admin/users/${id}/status`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ status }),
-      }
-    );
+    const response = await apiFetch<StatusUpdateResponse>(`${API_BASE}/admin/users/${id}/status`, {
+      method: "PUT",
+      body: JSON.stringify({ status }),
+    });
     return response;
   },
 
   /** PUT /api/admin/users/:id/extend */
   extendSubscription: async (id: number, days: number): Promise<ExtendResponse> => {
-    const response = await apiFetch<ExtendResponse>(
-      `${API_BASE}/admin/users/${id}/extend`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ days }),
-      }
-    );
+    const response = await apiFetch<ExtendResponse>(`${API_BASE}/admin/users/${id}/extend`, {
+      method: "PUT",
+      body: JSON.stringify({ days }),
+    });
     return response;
   },
 
   /** DELETE /api/admin/users/:id */
-  deleteUser: async (id: number): Promise<{ success: boolean; message: string; data: null; timestamp: string }> => {
-    const response = await apiFetch<{ success: boolean; message: string; data: null; timestamp: string }>(
-      `${API_BASE}/admin/users/${id}`,
-      { method: "DELETE" }
-    );
+  deleteUser: async (
+    id: number,
+  ): Promise<{ success: boolean; message: string; data: null; timestamp: string }> => {
+    const response = await apiFetch<{
+      success: boolean;
+      message: string;
+      data: null;
+      timestamp: string;
+    }>(`${API_BASE}/admin/users/${id}`, { method: "DELETE" });
     return response;
   },
 
@@ -225,13 +223,10 @@ export const api = {
 
   /** PUT /api/admin/profile/password */
   changePassword: async (data: ChangePasswordData): Promise<ChangePasswordResponse> => {
-    const response = await apiFetch<ChangePasswordResponse>(
-      `${API_BASE}/admin/profile/password`,
-      {
-        method: "PUT",
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await apiFetch<ChangePasswordResponse>(`${API_BASE}/admin/profile/password`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
     return response;
   },
 };

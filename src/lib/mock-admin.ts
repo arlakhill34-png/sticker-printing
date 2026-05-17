@@ -11,7 +11,9 @@ export const mockUsers: User[] = [
     phoneNumber: "9800000000",
     role: "USER",
     status: "ACTIVE",
-    subscriptionExpiry: new Date(TODAY.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    subscriptionExpiry: new Date(TODAY.getTime() + 365 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
     subscriptionStatus: "ACTIVE",
     createdAt: "2025-01-15T00:00:00",
   },
@@ -22,7 +24,9 @@ export const mockUsers: User[] = [
     phoneNumber: "9700000000",
     role: "USER",
     status: "ACTIVE",
-    subscriptionExpiry: new Date(TODAY.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    subscriptionExpiry: new Date(TODAY.getTime() + 60 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
     subscriptionStatus: "EXPIRING_SOON",
     createdAt: "2025-03-22T00:00:00",
   },
@@ -33,7 +37,9 @@ export const mockUsers: User[] = [
     phoneNumber: "9600000000",
     role: "USER",
     status: "BLOCKED",
-    subscriptionExpiry: new Date(TODAY.getTime() + 10 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    subscriptionExpiry: new Date(TODAY.getTime() + 10 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
     subscriptionStatus: "ACTIVE",
     createdAt: "2025-02-10T00:00:00",
   },
@@ -44,7 +50,9 @@ export const mockUsers: User[] = [
     phoneNumber: "9500000000",
     role: "USER",
     status: "ACTIVE",
-    subscriptionExpiry: new Date(TODAY.getTime() + 5 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    subscriptionExpiry: new Date(TODAY.getTime() + 5 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
     subscriptionStatus: "EXPIRED",
     createdAt: "2025-04-05T00:00:00",
   },
@@ -55,7 +63,9 @@ export const mockUsers: User[] = [
     phoneNumber: "9400000000",
     role: "USER",
     status: "PENDING",
-    subscriptionExpiry: new Date(TODAY.getTime() + 90 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    subscriptionExpiry: new Date(TODAY.getTime() + 90 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
     subscriptionStatus: "ACTIVE",
     createdAt: "2025-05-10T00:00:00",
   },
@@ -66,7 +76,9 @@ export const mockUsers: User[] = [
     phoneNumber: "9300000000",
     role: "USER",
     status: "ACTIVE",
-    subscriptionExpiry: new Date(TODAY.getTime() + 120 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    subscriptionExpiry: new Date(TODAY.getTime() + 120 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
     subscriptionStatus: "ACTIVE",
     createdAt: "2025-05-12T00:00:00",
   },
@@ -143,9 +155,21 @@ export const mockAnalytics: AnalyticsData = {
     return { date: d.toISOString().split("T")[0], count: 4 + Math.floor(Math.random() * 6) };
   }),
   subscriptionBreakdown: [
-    { name: "Active", value: mockUsers.filter((u) => u.subscriptionStatus === "ACTIVE").length, fill: "#1d4ed8" },
-    { name: "Expiring Soon", value: mockUsers.filter((u) => u.subscriptionStatus === "EXPIRING_SOON").length, fill: "#d97706" },
-    { name: "Expired", value: mockUsers.filter((u) => u.subscriptionStatus === "EXPIRED").length, fill: "#dc2626" },
+    {
+      name: "Active",
+      value: mockUsers.filter((u) => u.subscriptionStatus === "ACTIVE").length,
+      fill: "#1d4ed8",
+    },
+    {
+      name: "Expiring Soon",
+      value: mockUsers.filter((u) => u.subscriptionStatus === "EXPIRING_SOON").length,
+      fill: "#d97706",
+    },
+    {
+      name: "Expired",
+      value: mockUsers.filter((u) => u.subscriptionStatus === "EXPIRED").length,
+      fill: "#dc2626",
+    },
   ],
 };
 

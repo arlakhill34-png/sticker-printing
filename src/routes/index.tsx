@@ -13,11 +13,11 @@ function Index() {
   console.log("isLoading:", isLoading);
   console.log("companyName:", user?.companyName);
   console.log("companyEmail:", user?.companyEmail);
-  
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  
+
   const storeName = user?.companyName || "";
   const storeEmail = user?.companyEmail || "";
 
@@ -27,7 +27,7 @@ function Index() {
   const [price, setPrice] = useState("");
   const [qty, setQty] = useState(1);
   const [printing, setPrinting] = useState(false);
-  
+
   useEffect(() => {
     if (dark) {
       document.documentElement.classList.add("dark");
