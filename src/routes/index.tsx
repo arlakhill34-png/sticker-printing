@@ -5,7 +5,6 @@ import { useAuth } from "../lib/auth-context";
 import { Sticker } from "../components/sticker/Sticker";
 
 export const Route = createFileRoute("/")({
-
   component: Index,
 });
 
@@ -224,7 +223,6 @@ function Index() {
                   companyEmail={storeEmail}
                 />
               </div>
-
             </div>
           </section>
         </div>
@@ -241,7 +239,6 @@ function Index() {
               companyName={storeName}
               companyEmail={storeEmail}
             />
-
           ))}
         </div>
       </main>
@@ -271,8 +268,3 @@ function StepperBtn({ onClick, children }: { onClick: () => void; children: Reac
     </button>
   );
 }
-
-
-
-
-

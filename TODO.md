@@ -1,19 +1,8 @@
-# TODO - Sticker preview/print refactor
+# TODO
 
-- [x] Understand current sticker implementation and locate truncation + spacing issues.
-- [x] Approved redesign plan for Sticker modes and layout reflow.
-
-## Step list (in progress)
-- [ ] Implement Sticker redesign in `src/components/sticker/Sticker.tsx`
-  - [x] Remove ALL truncation behavior (ellipsis/nowrap/hidden text clipping)
-  - [x] Add wrap-safe text styles (word-break/overflow-wrap/white-space normal/line-height)
-  - [x] Replace layout with explicit vertical row stack (company, email, PID, EXIM, MRP)
-  - [x] Remove EXIM↔MRP gap fragile spacing; use natural reflow/controlled gap
-  - [x] Use conditional rendering for EXIM (no visibility hacks)
-  - [x] Increase preview width to ~420–480px and ensure responsive/clipping-free
-  - [x] Keep print exact 36mm × 30mm in print mode
-  - [x] Ensure typography hierarchy and centered premium appearance
-- [ ] Verify build/dev output
-- [ ] Validate long-text wrapping and responsive preview
-- [ ] Validate print preview accuracy (36mm × 30mm) and no overlaps
-
+- [ ] Update `Sticker.tsx` print alignment: LEFT-aligned content across both preview and print while keeping premium layout structure.
+- [ ] Implement print typography auto-scaling (pt + spacing) that preserves 36mm × 30mm dimensions, wrapping, and avoids overflow/clipping/overlap.
+- [ ] Ensure long content wraps naturally with no ellipsis/nowrap truncation in print.
+- [ ] Keep existing preview responsiveness and spacing (including EXIM ↔ MRP spacing behavior).
+- [ ] Run `npm run build` and verify no TS/formatting issues.
+- [ ] Manually sanity-check print styles via browser print preview (36mm × 30mm).

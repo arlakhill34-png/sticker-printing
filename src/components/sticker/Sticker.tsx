@@ -30,7 +30,6 @@ export function Sticker({
   const safeExim = eximcode?.trim() ? eximcode : "";
   const safeMrp = price || "0";
 
-  // PRINT MODE (exact 36mm × 30mm)
   if (mode === "print") {
     return (
       <div
@@ -55,70 +54,89 @@ export function Sticker({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "0.8mm",
-            textAlign: "center",
-            alignItems: "center",
+            gap: "0.72mm",
+            textAlign: "left",
+            alignItems: "flex-start",
+            width: "100%",
           }}
         >
-          {/* COMPANY NAME */}
+          <div
+            id="e55j5l"
+            className="sticker-line sticker-top-heading"
+            style={{
+              ...wrapTextStyle,
+              fontWeight: 400,
+              fontSize: "5.0pt",
+              letterSpacing: "0.02em",
+              lineHeight: 1.05,
+              textAlign: "left",
+              color: "#222222",
+              opacity: 0.9,
+            }}
+            title="Imported and Distributed by:"
+          >
+            Imported and Distributed by:
+          </div>
+
           <div
             className="sticker-line sticker-company"
             style={{
               ...wrapTextStyle,
               fontWeight: 800,
-              fontSize: "7.2pt",
+              fontSize: "6.8pt",
               letterSpacing: "0.02em",
               lineHeight: 1.05,
-              textAlign: "center",
+              textAlign: "left",
+              paddingRight: "0.2mm",
             }}
             title={safeCompany}
           >
             {safeCompany}
           </div>
 
-          {/* EMAIL */}
           <div
             className="sticker-line sticker-email"
             style={{
               ...wrapTextStyle,
               fontWeight: 400,
-              fontSize: "5.3pt",
+              fontSize: "5.0pt",
               color: "#222222",
               lineHeight: 1.1,
-              textAlign: "center",
+              textAlign: "left",
+              paddingRight: "0.2mm",
             }}
             title={safeEmail}
           >
             {safeEmail}
           </div>
 
-          {/* PID */}
           <div
             className="sticker-line sticker-pid"
             style={{
               ...wrapTextStyle,
               fontWeight: 400,
-              fontSize: "6.0pt",
+              fontSize: "5.7pt",
               letterSpacing: "0.05em",
-              lineHeight: 1.15,
-              textAlign: "center",
+              lineHeight: 1.12,
+              textAlign: "left",
+              paddingRight: "0.2mm",
             }}
             title={`PID: ${safePid}`}
           >
             PID: {safePid}
           </div>
 
-          {/* EXIM (conditional, no visibility hacks) */}
           {safeExim ? (
             <div
               className="sticker-line sticker-exim"
               style={{
                 ...wrapTextStyle,
                 fontWeight: 400,
-                fontSize: "6.0pt",
+                fontSize: "5.7pt",
                 color: "#222222",
-                lineHeight: 1.15,
-                textAlign: "center",
+                lineHeight: 1.12,
+                textAlign: "left",
+                paddingRight: "0.2mm",
               }}
               title={`EXIM: ${safeExim}`}
             >
@@ -126,17 +144,17 @@ export function Sticker({
             </div>
           ) : null}
 
-          {/* MRP */}
           <div
             className="sticker-line sticker-mrp"
             style={{
               ...wrapTextStyle,
               fontWeight: 900,
-              fontSize: "7.4pt",
+              fontSize: "7.0pt",
               letterSpacing: "0.01em",
               lineHeight: 1,
-              textAlign: "center",
-              marginTop: "0.4mm",
+              textAlign: "left",
+              marginTop: "0.25mm",
+              paddingRight: "0.2mm",
             }}
             title={`MRP: Rs. ${safeMrp}`}
           >
@@ -172,70 +190,90 @@ export function Sticker({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 10,
-          textAlign: "center",
-          alignItems: "center",
+          gap: 9,
+          textAlign: "left",
+          alignItems: "flex-start",
+          width: "100%",
         }}
       >
-        {/* COMPANY NAME */}
+        <div
+          id="e55j5l"
+          className="sticker-line sticker-top-heading"
+          style={{
+            ...wrapTextStyle,
+            fontWeight: 500,
+            fontSize: 13,
+            letterSpacing: "0.02em",
+            lineHeight: 1.1,
+            textAlign: "left",
+            color: "rgba(0,0,0,0.65)",
+            opacity: 0.95,
+            paddingRight: 2,
+          }}
+          title="Imported and Distributed by:"
+        >
+          Imported and Distributed by:
+        </div>
+
         <div
           className="sticker-line sticker-company"
           style={{
             ...wrapTextStyle,
             fontWeight: 900,
-            fontSize: 30,
+            fontSize: 26,
             letterSpacing: "0.01em",
-            lineHeight: 1.08,
-            textAlign: "center",
+            lineHeight: 1.06,
+            textAlign: "left",
+            paddingRight: 2,
           }}
           title={safeCompany}
         >
           {safeCompany}
         </div>
 
-        {/* EMAIL */}
         <div
           className="sticker-line sticker-email"
           style={{
             ...wrapTextStyle,
             fontWeight: 500,
-            fontSize: 14,
+            fontSize: 13,
             color: "rgba(0,0,0,0.60)",
             lineHeight: 1.2,
-            textAlign: "center",
+            textAlign: "left",
+            paddingRight: 2,
           }}
           title={safeEmail}
         >
           {safeEmail}
         </div>
 
-        {/* PID */}
         <div
           className="sticker-line sticker-pid"
           style={{
             ...wrapTextStyle,
             fontWeight: 700,
-            fontSize: 20,
+            fontSize: 17,
             letterSpacing: "0.06em",
             lineHeight: 1.2,
-            textAlign: "center",
+            textAlign: "left",
+            paddingRight: 2,
           }}
           title={`PID: ${safePid}`}
         >
           PID: {safePid}
         </div>
 
-        {/* EXIM (conditional, no visibility hacks) */}
         {safeExim ? (
           <div
             className="sticker-line sticker-exim"
             style={{
               ...wrapTextStyle,
               fontWeight: 600,
-              fontSize: 18,
+              fontSize: 16,
               color: "rgba(0,0,0,0.62)",
               lineHeight: 1.2,
-              textAlign: "center",
+              textAlign: "left",
+              paddingRight: 2,
             }}
             title={`EXIM: ${safeExim}`}
           >
@@ -243,17 +281,17 @@ export function Sticker({
           </div>
         ) : null}
 
-        {/* MRP */}
         <div
           className="sticker-line sticker-mrp"
           style={{
             ...wrapTextStyle,
             fontWeight: 950,
-            fontSize: 26,
+            fontSize: 23,
             letterSpacing: "0.01em",
-            lineHeight: 1.05,
-            textAlign: "center",
+            lineHeight: 1.04,
+            textAlign: "left",
             marginTop: 2,
+            paddingRight: 2,
           }}
           title={`MRP: Rs. ${safeMrp}`}
         >
@@ -263,4 +301,3 @@ export function Sticker({
     </div>
   );
 }
-
