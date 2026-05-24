@@ -18,21 +18,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const storedToken = getToken();
     if (storedToken) {
       setToken(storedToken);
       api
         .getMe()
-        .then(setUser)
-        .catch(() => {
-          removeToken();
-          setToken(null);
-          setUser(null);
+        .then((userData) => {
+          if (isMounted) setUser(userData);
         })
-        .finally(() => setIsLoading(false));
+        .catch(() => {
+          if (isMounted) {
+            removeToken();
+            setToken(null);
+            setUser(null);
+          }
+        })
+        .finally(() => {
+          if (isMounted) setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }
+    return () => { isMounted = false };
   }, []);
 
   const login = (newToken: string, userData: User) => {

@@ -59,7 +59,6 @@
 //   // },
 // });
 
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -84,12 +83,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          admin: [
-            "src/routes/admin",
-            "src/components/ui/sidebar",
-            "lucide-react",
-            "recharts",
-          ],
+          admin: ["src/routes/admin", "src/components/ui/sidebar", "lucide-react", "recharts"],
 
           react_vendor: [
             "react",

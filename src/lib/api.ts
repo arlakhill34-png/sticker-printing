@@ -62,6 +62,8 @@ export interface User {
   subscriptionExpiry: string;
   subscriptionStatus: string;
   createdAt: string;
+  stickerWidth?: number;
+  stickerHeight?: number;
 }
 
 export interface AdminUsersResponse {
@@ -167,6 +169,22 @@ export const api = {
 
   getMe: async (): Promise<User> => {
     const response = await apiFetch<ApiResponse<User>>(`${API_BASE}/user/me`);
+    return response.data;
+  },
+
+  updateUser: async (data: Partial<User>): Promise<User> => {
+    const response = await apiFetch<ApiResponse<User>>(`${API_BASE}/user`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+    return response.data;
+  },
+
+  updateStickerSize: async (width: number, height: number): Promise<User> => {
+    const response = await apiFetch<ApiResponse<User>>(`${API_BASE}/user/sticker-size`, {
+      method: "PUT",
+      body: JSON.stringify({ stickerWidth: width, stickerHeight: height }),
+    });
     return response.data;
   },
 

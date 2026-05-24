@@ -32,7 +32,8 @@ function Login() {
 
       login(res.data.token, res.data.user);
       toastSuccess("Login successful");
-      setTimeout(() => navigate({ to: "/" }), 1000);
+      const redirectTo = res.data.user.role === "ADMIN" ? "/admin" : "/";
+      navigate({ to: redirectTo });
     } catch (err) {
       const message = getApiErrorMessage(err);
       toastError(message);

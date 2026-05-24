@@ -1,9 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, createRootRouteWithContext, useRouter } from "@tanstack/react-router";
-import { AuthProvider, useAuth } from "../lib/auth-context";
-import { useEffect } from "react";
+import React from "react";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import { QueryClient } from "@tanstack/react-query";
+import { useAuth } from "../lib/auth-context";
 import { useNavigate } from "@tanstack/react-router";
-import { getToken } from "../lib/api";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -27,14 +26,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isLoading } = useAuth();
+  const { isLoading, token } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isLoading && !getToken()) {
+  React.useEffect(() => {
+    if (!isLoading && !token) {
       navigate({ to: "/login" });
     }
-  }, [isLoading, navigate]);
+  }, [isLoading, token, navigate]);
 
   if (isLoading) {
     return (
@@ -48,16 +47,12 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AuthGuard>
-          <Outlet />
-        </AuthGuard>
-      </AuthProvider>
+    <>
+      <AuthGuard>
+        <Outlet />
+      </AuthGuard>
       <Toaster position="top-right" richColors />
-    </QueryClientProvider>
+    </>
   );
 }

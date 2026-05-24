@@ -6,11 +6,9 @@ import { getRouter } from "./router";
 import { AuthProvider } from "./lib/auth-context";
 import "./styles.css";
 
-// Create the router
 const queryClient = new QueryClient();
-const router = getRouter();
+const router = getRouter(queryClient);
 
-// Create root element and render
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

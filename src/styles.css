@@ -101,22 +101,13 @@
   }
 }
 
-/* Print rules: only print-mode stickers print at exact 36mm × 30mm.
-   Preview-mode is intentionally NOT affected by these mm-based rules. */
+/* Print rules: print-mode stickers print at exact user-selected mm dimensions.
+    Preview-mode is intentionally NOT affected by these mm-based rules. */
 @media print {
   @page {
+    /* default; overridden by injected @page size in handlePrint() */
     size: 36mm 30mm;
     margin: 0;
-  }
-
-  html,
-  body {
-    width: 36mm !important;
-    height: 30mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #ffffff !important;
-    overflow: hidden !important;
   }
 
   body * {
@@ -128,12 +119,13 @@
     visibility: visible !important;
   }
 
+  /* IMPORTANT: Do NOT constrain html/body/#print-area sizes here.
+     This prevents mm-based global sizing from affecting the screen layout. */
+
   #print-area {
     position: fixed !important;
     top: 0;
     left: 0;
-    width: 36mm !important;
-    height: auto !important;
     margin: 0;
     padding: 0;
     display: block !important;

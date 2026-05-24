@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Minus, Plus, Printer, Settings, Moon, Sun, Tag, LogOut } from "lucide-react";
+import { Minus, Plus, Printer, Settings, Moon, Sun, Tag, LogOut, X } from "lucide-react";
 import { useAuth } from "../lib/auth-context";
+import { api } from "../lib/api";
 import { Sticker } from "../components/sticker/Sticker";
 
 export const Route = createFileRoute("/")({
@@ -10,25 +11,30 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const navigate = useNavigate();
-  const { user, logout, isLoading } = useAuth();
-  console.log("USER OBJECT:", user);
-  console.log("isLoading:", isLoading);
-  console.log("companyName:", user?.companyName);
-  console.log("companyEmail:", user?.companyEmail);
+  const { user, logout, isLoading, refreshUser } = useAuth();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const storeName = user?.companyName || "";
-  const storeEmail = user?.companyEmail || "";
-
+  // All hooks must be called before any early return
   const [dark, setDark] = useState(false);
   const [productId, setProductId] = useState("");
   const [eximcode, setEximcode] = useState("");
   const [price, setPrice] = useState("");
   const [qty, setQty] = useState(1);
   const [printing, setPrinting] = useState(false);
+  const [stickerWidth, setStickerWidth] = useState(36);
+  const [stickerHeight, setStickerHeight] = useState(30);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [savingSize, setSavingSize] = useState(false);
+
+  const pidRef = useRef<HTMLInputElement>(null);
+  const eximcodeRef = useRef<HTMLInputElement>(null);
+  const priceRef = useRef<HTMLInputElement>(null);
+  const qtyRef = useRef<HTMLInputElement>(null);
+
+  // Load sticker size from user settings
+  useEffect(() => {
+    if (user && user.stickerWidth) setStickerWidth(user.stickerWidth);
+    if (user && user.stickerHeight) setStickerHeight(user.stickerHeight);
+  }, [user]);
 
   useEffect(() => {
     if (dark) {
@@ -38,10 +44,18 @@ function Index() {
     }
   }, [dark]);
 
-  const pidRef = useRef<HTMLInputElement>(null);
-  const eximcodeRef = useRef<HTMLInputElement>(null);
-  const priceRef = useRef<HTMLInputElement>(null);
-  const qtyRef = useRef<HTMLInputElement>(null);
+  const handleSaveSize = async () => {
+    setSavingSize(true);
+    try {
+      await api.updateStickerSize(stickerWidth, stickerHeight);
+      setSettingsOpen(false);
+      refreshUser();
+    } catch (e) {
+      console.error("Failed to save size:", e);
+    } finally {
+      setSavingSize(false);
+    }
+  };
 
   const onKey = (next: string) => (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -66,6 +80,13 @@ function Index() {
       setPrinting(false);
     }, 100);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const storeName = user?.companyName || "";
+  const storeEmail = user?.companyEmail || "";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -92,6 +113,7 @@ function Index() {
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
             <button
+              onClick={() => setSettingsOpen(true)}
               className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Settings"
             >
@@ -107,6 +129,62 @@ function Index() {
           </div>
         </div>
       </header>
+
+      {/* Settings Dialog */}
+      {settingsOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-lg">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Sticker Size</h3>
+              <button
+                onClick={() => setSettingsOpen(false)}
+                className="rounded-md p-1 text-muted-foreground hover:bg-muted"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs font-medium uppercase text-muted-foreground">
+                  Width (mm)
+                </label>
+                <input
+                  type="number"
+                  value={stickerWidth}
+                  onChange={(e) =>
+                    setStickerWidth(Math.max(10, parseInt(e.target.value || "36", 10)))
+                  }
+                  className="mt-1 h-10 w-full rounded-lg border border-input bg-background px-3 text-base outline-none focus:border-ring"
+                  min={10}
+                  max={100}
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium uppercase text-muted-foreground">
+                  Height (mm)
+                </label>
+                <input
+                  type="number"
+                  value={stickerHeight}
+                  onChange={(e) =>
+                    setStickerHeight(Math.max(10, parseInt(e.target.value || "30", 10)))
+                  }
+                  className="mt-1 h-10 w-full rounded-lg border border-input bg-background px-3 text-base outline-none focus:border-ring"
+                  min={10}
+                  max={100}
+                />
+              </div>
+              <button
+                onClick={handleSaveSize}
+                disabled={savingSize}
+                className="h-10 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:brightness-110 disabled:opacity-70"
+              >
+                {savingSize ? "Saving..." : "Save Size"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main */}
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 print:p-0">
@@ -204,7 +282,7 @@ function Index() {
               <div>
                 <h2 className="text-lg sm:text-xl font-semibold tracking-tight">Live Preview</h2>
                 <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
-                  36mm × 30mm thermal label
+                  {stickerWidth}mm × {stickerHeight}mm thermal label
                 </p>
               </div>
               <span className="rounded-full border border-border bg-muted/60 px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
@@ -213,7 +291,15 @@ function Index() {
             </div>
 
             <div className="flex min-h-[260px] sm:min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-8 sm:py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
-              <div className="flex items-center justify-center">
+              <div
+                style={{
+                  transform: "scale(3)",
+                  transformOrigin: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Sticker
                   mode="preview"
                   productId={productId}
@@ -238,6 +324,8 @@ function Index() {
               eximcode={eximcode}
               companyName={storeName}
               companyEmail={storeEmail}
+              width={stickerWidth}
+              height={stickerHeight}
             />
           ))}
         </div>

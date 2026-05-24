@@ -9,6 +9,25 @@ const wrapTextStyle = {
   lineHeight: 1.2,
 } as const;
 
+const BASE_WIDTH = 36;
+const BASE_HEIGHT = 30;
+
+const PREVIEW_TYPOGRAPHY = {
+  topHeading: 5.0,
+  company: 6.8,
+  email: 5.0,
+  pid: 5.7,
+  exim: 5.7,
+  mrp: 7.0,
+};
+
+const PREVIEW_SPACING = {
+  gap: 0.72,
+  padding: 2,
+  marginRight: 0.2,
+  marginTop: 0.25,
+};
+
 export function Sticker({
   mode,
   productId,
@@ -16,6 +35,8 @@ export function Sticker({
   price,
   companyName,
   companyEmail,
+  width = BASE_WIDTH,
+  height = BASE_HEIGHT,
 }: {
   mode: StickerMode;
   productId: string;
@@ -23,6 +44,8 @@ export function Sticker({
   price: string;
   companyName: string;
   companyEmail: string;
+  width?: number;
+  height?: number;
 }) {
   const safeCompany = companyName || "—";
   const safeEmail = companyEmail || "—";
@@ -31,13 +54,31 @@ export function Sticker({
   const safeMrp = price || "0";
 
   if (mode === "print") {
+    const scaleFactor = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
+
+    const typography = {
+      topHeading: Math.max(3.8, 5.0 * scaleFactor),
+      company: Math.max(5.5, 6.8 * scaleFactor),
+      email: Math.max(3.8, 5.0 * scaleFactor),
+      pid: Math.max(4.5, 5.7 * scaleFactor),
+      exim: Math.max(4.5, 5.7 * scaleFactor),
+      mrp: Math.max(5.5, 7.0 * scaleFactor),
+    };
+
+    const spacing = {
+      gap: Math.max(0.4, 0.72 * scaleFactor),
+      padding: Math.max(1.2, 2 * scaleFactor),
+      marginRight: Math.max(0.15, 0.2 * scaleFactor),
+      marginTop: Math.max(0.15, 0.25 * scaleFactor),
+    };
+
     return (
       <div
         className="sticker sticker-print"
         data-sticker-mode="print"
         style={{
-          width: "36mm",
-          height: "30mm",
+          width: `${width}mm`,
+          height: `${height}mm`,
           boxSizing: "border-box",
           background: "#ffffff",
           color: "#000000",
@@ -45,7 +86,7 @@ export function Sticker({
           boxShadow: "none",
           display: "flex",
           flexDirection: "column",
-          padding: "2mm 2mm",
+          padding: `${spacing.padding}mm ${spacing.padding}mm`,
           fontFamily: "Times New Roman, serif",
           overflow: "hidden",
         }}
@@ -54,7 +95,7 @@ export function Sticker({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "0.72mm",
+            gap: `${spacing.gap}mm`,
             textAlign: "left",
             alignItems: "flex-start",
             width: "100%",
@@ -66,7 +107,7 @@ export function Sticker({
             style={{
               ...wrapTextStyle,
               fontWeight: 400,
-              fontSize: "5.0pt",
+              fontSize: `${typography.topHeading}pt`,
               letterSpacing: "0.02em",
               lineHeight: 1.05,
               textAlign: "left",
@@ -83,11 +124,11 @@ export function Sticker({
             style={{
               ...wrapTextStyle,
               fontWeight: 800,
-              fontSize: "6.8pt",
+              fontSize: `${typography.company}pt`,
               letterSpacing: "0.02em",
               lineHeight: 1.05,
               textAlign: "left",
-              paddingRight: "0.2mm",
+              paddingRight: `${spacing.marginRight}mm`,
             }}
             title={safeCompany}
           >
@@ -99,11 +140,11 @@ export function Sticker({
             style={{
               ...wrapTextStyle,
               fontWeight: 400,
-              fontSize: "5.0pt",
+              fontSize: `${typography.email}pt`,
               color: "#222222",
               lineHeight: 1.1,
               textAlign: "left",
-              paddingRight: "0.2mm",
+              paddingRight: `${spacing.marginRight}mm`,
             }}
             title={safeEmail}
           >
@@ -115,11 +156,11 @@ export function Sticker({
             style={{
               ...wrapTextStyle,
               fontWeight: 400,
-              fontSize: "5.7pt",
+              fontSize: `${typography.pid}pt`,
               letterSpacing: "0.05em",
               lineHeight: 1.12,
               textAlign: "left",
-              paddingRight: "0.2mm",
+              paddingRight: `${spacing.marginRight}mm`,
             }}
             title={`PID: ${safePid}`}
           >
@@ -132,11 +173,11 @@ export function Sticker({
               style={{
                 ...wrapTextStyle,
                 fontWeight: 400,
-                fontSize: "5.7pt",
+                fontSize: `${typography.exim}pt`,
                 color: "#222222",
                 lineHeight: 1.12,
                 textAlign: "left",
-                paddingRight: "0.2mm",
+                paddingRight: `${spacing.marginRight}mm`,
               }}
               title={`EXIM: ${safeExim}`}
             >
@@ -149,12 +190,12 @@ export function Sticker({
             style={{
               ...wrapTextStyle,
               fontWeight: 900,
-              fontSize: "7.0pt",
+              fontSize: `${typography.mrp}pt`,
               letterSpacing: "0.01em",
               lineHeight: 1,
               textAlign: "left",
-              marginTop: "0.25mm",
-              paddingRight: "0.2mm",
+              marginTop: `${spacing.marginTop}mm`,
+              paddingRight: `${spacing.marginRight}mm`,
             }}
             title={`MRP: Rs. ${safeMrp}`}
           >
@@ -165,32 +206,30 @@ export function Sticker({
     );
   }
 
-  // PREVIEW MODE (px sizing, responsive and premium)
   return (
     <div
       className="sticker sticker-preview"
       data-sticker-mode="preview"
       style={{
-        width: 460,
-        maxWidth: "92vw",
-        minWidth: 300,
-        borderRadius: 16,
+        width: `${BASE_WIDTH}mm`,
+        height: `${BASE_HEIGHT}mm`,
+        borderRadius: 2,
         border: "1px solid rgba(0,0,0,0.08)",
         background: "rgba(255,255,255,0.95)",
         boxShadow: "0 14px 34px rgba(0,0,0,0.10)",
-        padding: 18,
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "stretch",
         overflow: "visible",
+        padding: `${PREVIEW_SPACING.padding}mm`,
       }}
     >
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 9,
+          gap: `${PREVIEW_SPACING.gap}mm`,
           textAlign: "left",
           alignItems: "flex-start",
           width: "100%",
@@ -201,14 +240,14 @@ export function Sticker({
           className="sticker-line sticker-top-heading"
           style={{
             ...wrapTextStyle,
-            fontWeight: 500,
-            fontSize: 13,
+            fontWeight: 400,
+            fontSize: `${PREVIEW_TYPOGRAPHY.topHeading}pt`,
             letterSpacing: "0.02em",
-            lineHeight: 1.1,
+            lineHeight: 1.05,
             textAlign: "left",
-            color: "rgba(0,0,0,0.65)",
-            opacity: 0.95,
-            paddingRight: 2,
+            color: "#222222",
+            opacity: 0.9,
+            paddingRight: `${PREVIEW_SPACING.marginRight}mm`,
           }}
           title="Imported and Distributed by:"
         >
@@ -219,12 +258,12 @@ export function Sticker({
           className="sticker-line sticker-company"
           style={{
             ...wrapTextStyle,
-            fontWeight: 900,
-            fontSize: 26,
-            letterSpacing: "0.01em",
-            lineHeight: 1.06,
+            fontWeight: 800,
+            fontSize: `${PREVIEW_TYPOGRAPHY.company}pt`,
+            letterSpacing: "0.02em",
+            lineHeight: 1.05,
             textAlign: "left",
-            paddingRight: 2,
+            paddingRight: `${PREVIEW_SPACING.marginRight}mm`,
           }}
           title={safeCompany}
         >
@@ -235,12 +274,12 @@ export function Sticker({
           className="sticker-line sticker-email"
           style={{
             ...wrapTextStyle,
-            fontWeight: 500,
-            fontSize: 13,
-            color: "rgba(0,0,0,0.60)",
-            lineHeight: 1.2,
+            fontWeight: 400,
+            fontSize: `${PREVIEW_TYPOGRAPHY.email}pt`,
+            color: "#222222",
+            lineHeight: 1.1,
             textAlign: "left",
-            paddingRight: 2,
+            paddingRight: `${PREVIEW_SPACING.marginRight}mm`,
           }}
           title={safeEmail}
         >
@@ -251,12 +290,12 @@ export function Sticker({
           className="sticker-line sticker-pid"
           style={{
             ...wrapTextStyle,
-            fontWeight: 700,
-            fontSize: 17,
-            letterSpacing: "0.06em",
-            lineHeight: 1.2,
+            fontWeight: 400,
+            fontSize: `${PREVIEW_TYPOGRAPHY.pid}pt`,
+            letterSpacing: "0.05em",
+            lineHeight: 1.12,
             textAlign: "left",
-            paddingRight: 2,
+            paddingRight: `${PREVIEW_SPACING.marginRight}mm`,
           }}
           title={`PID: ${safePid}`}
         >
@@ -268,12 +307,12 @@ export function Sticker({
             className="sticker-line sticker-exim"
             style={{
               ...wrapTextStyle,
-              fontWeight: 600,
-              fontSize: 16,
-              color: "rgba(0,0,0,0.62)",
-              lineHeight: 1.2,
+              fontWeight: 400,
+              fontSize: `${PREVIEW_TYPOGRAPHY.exim}pt`,
+              color: "#222222",
+              lineHeight: 1.12,
               textAlign: "left",
-              paddingRight: 2,
+              paddingRight: `${PREVIEW_SPACING.marginRight}mm`,
             }}
             title={`EXIM: ${safeExim}`}
           >
@@ -285,13 +324,13 @@ export function Sticker({
           className="sticker-line sticker-mrp"
           style={{
             ...wrapTextStyle,
-            fontWeight: 950,
-            fontSize: 23,
+            fontWeight: 900,
+            fontSize: `${PREVIEW_TYPOGRAPHY.mrp}pt`,
             letterSpacing: "0.01em",
-            lineHeight: 1.04,
+            lineHeight: 1,
             textAlign: "left",
-            marginTop: 2,
-            paddingRight: 2,
+            marginTop: `${PREVIEW_SPACING.marginTop}mm`,
+            paddingRight: `${PREVIEW_SPACING.marginRight}mm`,
           }}
           title={`MRP: Rs. ${safeMrp}`}
         >

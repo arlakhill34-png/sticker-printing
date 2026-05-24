@@ -39,7 +39,7 @@ function Register() {
 
       login(res.data.token, res.data.user);
       toastSuccess("Registration successful");
-      setTimeout(() => navigate({ to: "/" }), 1000);
+      navigate({ to: "/" });
     } catch (err) {
       const message = getApiErrorMessage(err);
       toastError(message);
