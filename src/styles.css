@@ -131,26 +131,18 @@
     display: block !important;
   }
 
-  /* Only apply size/print behavior to print-mode sticker elements */
-  [data-sticker-mode="print"] {
-    box-sizing: border-box !important;
-    border: none !important;
-    box-shadow: none !important;
-    width: 36mm !important;
-    min-width: 36mm !important;
-    max-width: 36mm !important;
-    height: 30mm !important;
-    min-height: 30mm !important;
-    max-height: 30mm !important;
-    padding: 1.8mm 2mm !important;
-    margin: 0 !important;
-    page-break-after: always;
-    break-after: page;
-    overflow: hidden;
-  }
+/* Only apply size/print behavior to print-mode sticker elements */
+   [data-sticker-mode="print"] {
+     box-sizing: border-box !important;
+     border: none !important;
+     box-shadow: none !important;
+     page-break-after: always;
+     break-after: page;
+     overflow: hidden;
+   }
 
-  [data-sticker-mode="print"]:last-child {
-    page-break-after: auto;
-    break-after: auto;
-  }
+   [data-sticker-mode="print"]:last-child {
+     page-break-after: auto;
+     break-after: auto;
+   }
 }

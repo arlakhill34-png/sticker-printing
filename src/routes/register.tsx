@@ -37,7 +37,7 @@ function Register() {
         throw new Error("Invalid register response: token missing");
       }
 
-      login(res.data.token, res.data.user);
+      await login(res.data.token);
       toastSuccess("Registration successful");
       navigate({ to: "/" });
     } catch (err) {

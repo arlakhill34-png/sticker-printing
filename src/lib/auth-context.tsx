@@ -5,7 +5,7 @@ interface AuthContextValue {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (token: string, user: User) => void;
+  login: (token: string) => Promise<void>;
   logout: (onDone?: () => void) => void;
   refreshUser: () => Promise<void>;
 }
@@ -40,13 +40,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       setIsLoading(false);
     }
-    return () => { isMounted = false };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const login = (newToken: string, userData: User) => {
+  const login = async (newToken: string) => {
     saveToken(newToken);
     setToken(newToken);
-    setUser(userData);
+    try {
+      const fullUser = await api.getMe();
+      console.log("LOGIN SUCCESS");
+      console.log("FETCHED USER FROM /ME:", fullUser);
+      console.log("STICKER SIZE:", {
+        width: fullUser.stickerWidth,
+        height: fullUser.stickerHeight,
+      });
+      setUser(fullUser);
+    } catch (e) {
+      console.error("Failed to fetch user after login:", e);
+      removeToken();
+      setToken(null);
+      setUser(null);
+      throw e;
+    }
   };
 
   const logout = (onDone?: () => void) => {

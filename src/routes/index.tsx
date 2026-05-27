@@ -75,9 +75,20 @@ function Index() {
 
   const handlePrint = () => {
     setPrinting(true);
+
+    // Inject @page size dynamically for mm-based printing
+    const style = document.createElement("style");
+    style.id = "print-page-size";
+    style.textContent = `@page { size: ${stickerWidth}mm ${stickerHeight}mm; margin: 0; }`;
+    document.head.appendChild(style);
+
     setTimeout(() => {
       window.print();
       setPrinting(false);
+
+      // Clean up injected style
+      const injected = document.getElementById("print-page-size");
+      if (injected) injected.remove();
     }, 100);
   };
 
@@ -293,8 +304,6 @@ function Index() {
             <div className="flex min-h-[260px] sm:min-h-[320px] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_center,_oklch(0_0_0/0.04)_1px,_transparent_1px)] [background-size:14px_14px] py-8 sm:py-10 dark:bg-[radial-gradient(circle_at_center,_oklch(1_0_0/0.05)_1px,_transparent_1px)]">
               <div
                 style={{
-                  transform: "scale(3)",
-                  transformOrigin: "center",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -307,6 +316,8 @@ function Index() {
                   eximcode={eximcode}
                   companyName={storeName}
                   companyEmail={storeEmail}
+                  width={stickerWidth}
+                  height={stickerHeight}
                 />
               </div>
             </div>

@@ -1,15 +1,25 @@
-# TODO
+# TODO - Initial fixes for first-load errors
 
-- [x] Update sticker sizing to be user-controllable in `src/routes/index.tsx` (widthMm/heightMm inputs with mm, min/max, validation, defaults 36×30).
-- [ ] Pass `widthMm` and `heightMm` props into `<Sticker mode="preview" ... />` and `<Sticker mode="print" ... />`.
-- [ ] Refactor `src/components/sticker/Sticker.tsx`:
-  - [ ] Implement a shared proportional sizing engine derived from widthMm/heightMm.
-  - [ ] Use dynamic typography + spacing + padding in BOTH preview and print.
-  - [ ] Ensure wrapping rules remain (word-break/overflow-wrap/whiteSpace normal), left alignment, no clipping.
-- [ ] Update `src/styles.css` print media rules:
-  - [ ] Remove/stop hardcoded `36mm × 30mm` for `[data-sticker-mode="print"]`.
-  - [ ] Apply sizing using CSS variables set via inline styles/props, so each sticker prints at the selected mm dimensions.
-- [ ] Ensure print output reflows correctly for variable sticker sizes (avoid overlap/gaps).
-- [ ] Ensure preview remains a realistic aspect-ratio simulation (px sizing derived from mm dimensions).
-- [ ] Run `npm run build` and verify TS/formatting.
-- [ ] Manually sanity-check browser print preview for multiple sizes (e.g., 50×40, 25×20).
+## Step 1: Confirm failing network calls ✅
+- Identify where `api.getMe()` runs on first load (AuthProvider).
+- Confirm exact API_BASE usage.
+
+
+## Step 2: Make auth bootstrap resilient
+- Prevent endless/rapid failures when backend hostname is unreachable.
+- Optionally add timeout and backoff for `getMe()`.
+- Add clearer console logging for backend connectivity.
+
+## Step 3: Make backend URL configurable
+- Support `VITE_API_BASE` (fallback to current onrender URL).
+- Ensure Vite exposes it via env.
+
+## Step 4: Re-test first-load behavior
+- Open the app fresh in browser.
+- Verify no repeated console spam.
+- Verify app still loads UI even when backend is offline.
+
+## Step 5: Address font 404 (if needed)
+- Check if Google Fonts request is blocked/rewritten.
+- Consider bundling fonts locally or removing dependency.
+

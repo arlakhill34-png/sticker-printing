@@ -30,7 +30,7 @@ function Login() {
         throw new Error("Invalid login response: token missing");
       }
 
-      login(res.data.token, res.data.user);
+      await login(res.data.token);
       toastSuccess("Login successful");
       const redirectTo = res.data.user.role === "ADMIN" ? "/admin" : "/";
       navigate({ to: redirectTo });
