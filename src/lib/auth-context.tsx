@@ -15,34 +15,27 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
     const storedToken = getToken();
-    if (storedToken) {
-      setToken(storedToken);
-      api
-        .getMe()
-        .then((userData) => {
-          if (isMounted) setUser(userData);
-        })
-        .catch(() => {
-          if (isMounted) {
-            removeToken();
-            setToken(null);
-            setUser(null);
-          }
-        })
-        .finally(() => {
-          if (isMounted) setIsLoading(false);
-        });
-    } else {
-      setIsLoading(false);
+    if (!storedToken) {
+      return;
     }
-    return () => {
-      isMounted = false;
-    };
+    setToken(storedToken);
+    api
+      .getMe()
+      .then((userData) => {
+        setUser(userData);
+      })
+      .catch(() => {
+        removeToken();
+        setToken(null);
+        setUser(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const login = async (newToken: string) => {

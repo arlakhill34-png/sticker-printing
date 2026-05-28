@@ -27,9 +27,38 @@ import {
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import { ReactNode } from "react";
 
-export type NavItem = { label: string; to: string; icon?: React.ReactNode };
+export type NavItem = { label: string; to: string; icon?: React.ReactNode | React.ElementType };
 
 export function AdminOuter({
+  navItems = [],
+  title,
+  subtitle,
+  actions,
+  children,
+}: {
+  navItems?: NavItem[];
+  title: string;
+  subtitle?: string;
+  actions?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <SidebarProvider defaultOpen={true}>
+      <AdminContent
+        navItems={navItems}
+        title={title}
+        subtitle={subtitle}
+        actions={actions}
+      >
+        {children}
+      </AdminContent>
+    </SidebarProvider>
+  );
+}
+
+export const AdminInner = AdminOuter;
+
+function AdminContent({
   navItems,
   title,
   subtitle,
@@ -123,7 +152,7 @@ export function AdminOuter({
   }
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <>
       {isMobile && openMobile && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
@@ -265,6 +294,6 @@ export function AdminOuter({
           {children}
         </div>
       </main>
-    </SidebarProvider>
+    </>
   );
 }

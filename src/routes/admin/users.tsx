@@ -1,11 +1,11 @@
-import { createFileRoute, Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Search, X, MoreVertical } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Search, X, MoreVertical, Loader2 } from "lucide-react";
 import { useState, useMemo } from "react";
-import { useAuth } from "../../lib/auth-context";
-import { mockUsers } from "../../lib/mock-admin";
 import type { User } from "../../lib/api";
-import { toastSuccess, toastInfo } from "../../lib/toast";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { toastInfo } from "../../lib/toast";
+import { useUsers } from "../../hooks/use-users-query";
+import { useUpdateUserStatus, useExtendSubscription, useDeleteUser } from "../../hooks/use-users-mutation";
+import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import {
@@ -25,33 +25,24 @@ import {
   DialogTitle,
 } from "../../components/ui/dialog";
 import { Separator } from "../../components/ui/separator";
+import { AdminInner, NavItem } from "./-_admin-inner";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from "../../components/ui/sidebar";
-import { Avatar, AvatarFallback } from "../../components/ui/avatar";
-import { AdminInner } from "./index";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/admin/users")({
   component: UsersPage,
 });
 
-const NAV_ITEMS: { label: string; to: string; Icon: React.ElementType }[] = [
+const NAV_ITEMS: NavItem[] = [
   {
     label: "Dashboard",
     to: "/admin",
-    Icon: (p: any) => (
+    icon: (p: any) => (
       <svg
         {...p}
         xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +64,7 @@ const NAV_ITEMS: { label: string; to: string; Icon: React.ElementType }[] = [
   {
     label: "Users",
     to: "/admin/users",
-    Icon: (p: any) => (
+    icon: (p: any) => (
       <svg
         {...p}
         xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +86,7 @@ const NAV_ITEMS: { label: string; to: string; Icon: React.ElementType }[] = [
   {
     label: "Analytics",
     to: "/admin/analytics",
-    Icon: (p: any) => (
+    icon: (p: any) => (
       <svg
         {...p}
         xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +108,7 @@ const NAV_ITEMS: { label: string; to: string; Icon: React.ElementType }[] = [
   {
     label: "Login Logs",
     to: "/admin/logs",
-    Icon: (p: any) => (
+    icon: (p: any) => (
       <svg
         {...p}
         xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +130,7 @@ const NAV_ITEMS: { label: string; to: string; Icon: React.ElementType }[] = [
   {
     label: "Settings",
     to: "/admin/settings",
-    Icon: (p: any) => (
+    icon: (p: any) => (
       <svg
         {...p}
         xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +159,11 @@ const NAV_ITEMS: { label: string; to: string; Icon: React.ElementType }[] = [
 type StatusFilter = "all" | "ACTIVE" | "BLOCKED" | "PENDING" | User["status"];
 
 function UsersPage() {
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  const { data: users = [], isLoading, isError, refetch } = useUsers();
+  const updateStatusMutation = useUpdateUserStatus();
+  const extendSubscriptionMutation = useExtendSubscription();
+  const deleteUserMutation = useDeleteUser();
+  
   const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [confirmDialog, setConfirmDialog] = useState<{
@@ -243,14 +238,82 @@ function UsersPage() {
     </div>
   );
 
+  const handleUpdateStatus = () => {
+    if (!confirmDialog) return;
+    const { type, user } = confirmDialog;
+    updateStatusMutation.mutate({ 
+      id: user.id, 
+      status: type === "block" ? "BLOCKED" : "ACTIVE" 
+    });
+    setConfirmDialog(null);
+  };
+
+  const handleExtend = () => {
+    if (!extendDialog) return;
+    extendSubscriptionMutation.mutate({ 
+      id: extendDialog.user.id, 
+      days: extendDialog.days 
+    });
+    setExtendDialog(null);
+  };
+
+  const handleDelete = () => {
+    if (!confirmDialog) return;
+    deleteUserMutation.mutate(confirmDialog.user.id);
+    setConfirmDialog(null);
+  };
+
+  if (isLoading) {
+    return (
+      <AdminInner
+        title="User Management"
+        subtitle="Manage all registered companies and subscriptions"
+        actions={actionsBar}
+        navItems={NAV_ITEMS}
+      >
+        <div className="space-y-3 p-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 p-4 border-b">
+              <div className="h-4 w-40 bg-muted rounded animate-pulse" />
+              <div className="h-4 w-48 bg-muted rounded animate-pulse" />
+              <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+              <div className="h-5 w-20 bg-muted rounded-full animate-pulse" />
+              <div className="h-4 w-24 bg-muted rounded animate-pulse" />
+              <div className="h-6 w-16 bg-muted rounded-full animate-pulse" />
+              <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </AdminInner>
+    );
+  }
+
+  if (isError) {
+    return (
+      <AdminInner
+        title="User Management"
+        subtitle="Manage all registered companies and subscriptions"
+        actions={actionsBar}
+        navItems={NAV_ITEMS}
+      >
+        <div className="flex min-h-[400px] flex-col items-center justify-center gap-4">
+          <p className="text-sm text-muted-foreground">Failed to load users</p>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            Try Again
+          </Button>
+        </div>
+      </AdminInner>
+    );
+  }
+
   return (
     <AdminInner
       title="User Management"
       subtitle="Manage all registered companies and subscriptions"
       actions={actionsBar}
+      navItems={NAV_ITEMS}
     >
       <div className="space-y-6">
-        {/* Mobile status pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto sm:hidden pb-1">
           {(["all", "ACTIVE", "BLOCKED", "PENDING"] as StatusFilter[]).map((s) => (
             <button
@@ -269,7 +332,6 @@ function UsersPage() {
           ))}
         </div>
 
-        {/* Table */}
         <Card className="overflow-hidden rounded-xl border bg-card shadow-sm">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -344,7 +406,6 @@ function UsersPage() {
           </CardContent>
         </Card>
 
-        {/* Confirm / Extend dialogs */}
         <Dialog
           open={!!confirmDialog && confirmDialog?.type !== "delete"}
           onOpenChange={() => setConfirmDialog(null)}
@@ -367,8 +428,12 @@ function UsersPage() {
               <Button
                 variant={confirmDialog?.type === "block" ? "destructive" : "default"}
                 size="sm"
-                onClick={applyConfirm}
+                onClick={handleUpdateStatus}
+                disabled={updateStatusMutation.isPending}
               >
+                {updateStatusMutation.isPending && (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                )}
                 {confirmDialog?.type === "block" ? "Block" : "Unblock"}
               </Button>
             </DialogFooter>
@@ -403,7 +468,14 @@ function UsersPage() {
               <Button variant="outline" size="sm" onClick={() => setExtendDialog(null)}>
                 Cancel
               </Button>
-              <Button size="sm" onClick={applyExtend}>
+              <Button 
+                size="sm" 
+                onClick={handleExtend}
+                disabled={extendSubscriptionMutation.isPending}
+              >
+                {extendSubscriptionMutation.isPending && (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                )}
                 Extend
               </Button>
             </DialogFooter>
@@ -426,7 +498,15 @@ function UsersPage() {
               <Button variant="outline" size="sm" onClick={() => setConfirmDialog(null)}>
                 Cancel
               </Button>
-              <Button variant="destructive" size="sm" onClick={applyDelete}>
+              <Button 
+                variant="destructive" 
+                size="sm" 
+                onClick={handleDelete}
+                disabled={deleteUserMutation.isPending}
+              >
+                {deleteUserMutation.isPending && (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                )}
                 Delete
               </Button>
             </DialogFooter>
@@ -495,45 +575,4 @@ function UserActionsDropdown({
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
-
-export { Separator, Avatar, AvatarFallback, Button, Badge, useAuth };
-
-function applyConfirm() {
-  if (!confirmDialog) return;
-  const { type, user } = confirmDialog;
-  setUsers((prev) =>
-    prev.map((u) => ({
-      ...u,
-      status: type === "block" ? ("BLOCKED" as const) : ("ACTIVE" as const),
-    })),
-  );
-  toastSuccess(type === "block" ? "User Blocked" : "User Unblocked", {
-    description: `${user.companyName} has been ${type === "block" ? "blocked" : "unblocked"}.`,
-  });
-  setConfirmDialog(null);
-}
-
-function applyExtend() {
-  if (!extendDialog) return;
-  const d = new Date();
-  d.setDate(d.getDate() + extendDialog.days);
-  setUsers((prev) =>
-    prev.map((u) =>
-      u.id === extendDialog.user.id
-        ? { ...u, subscriptionExpiry: d.toISOString().split("T")[0] }
-        : u,
-    ),
-  );
-  toastSuccess("Subscription Extended", {
-    description: `${extendDialog.user.companyName} extended by ${extendDialog.days} days.`,
-  });
-  setExtendDialog(null);
-}
-
-function applyDelete() {
-  if (!confirmDialog) return;
-  setUsers((prev) => prev.filter((u) => u.id !== confirmDialog.user.id));
-  toastSuccess("User Deleted", { description: `${confirmDialog.user.companyName} removed.` });
-  setConfirmDialog(null);
 }

@@ -92,7 +92,6 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  
   fullPaths:
     | '/'
     | '/login'
